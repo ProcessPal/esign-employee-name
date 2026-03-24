@@ -28,6 +28,12 @@ Offer Letter*.pdf
 # Claude Code state
 .claude/gsd-state/
 
+# Firecrawl cache
+.firecrawl/
+
+# Certificates (private keys - auto-generated at runtime)
+certs/
+
 # Node (for Cloudflare Workers)
 node_modules/
 .wrangler/

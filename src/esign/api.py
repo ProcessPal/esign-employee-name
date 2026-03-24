@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from esign.extractor import find_text_locations
-from esign.prepare import add_form_fields, stamp_fields_onto_pdf
+from esign.prepare import embed_field_metadata, read_field_metadata, sign_and_lock_pdf, stamp_fields_onto_pdf
 from esign.signer import add_signature_fields
 
 app = FastAPI(title="eSign Employee Name API", version="0.1.0")
@@ -40,7 +40,57 @@ def health():
     return {"status": "ok"}
 
 
-# --- Web UI endpoint: visual field placement ---
+# --- Web UI endpoints ---
+
+
+@app.post("/api/detect-fields")
+async def api_detect_fields(file: UploadFile = File(...)):
+    """Read embedded field metadata from a prepared PDF."""
+    content = await file.read()
+    if len(content) < 5 or content[:5] != b"%PDF-":
+        return JSONResponse(status_code=400, content={"detail": "Invalid PDF"})
+
+    fields = read_field_metadata(content)
+    if fields is None:
+        return {"fields": []}
+
+    return {"fields": fields}
+
+
+@app.post("/api/lock-signed")
+async def api_lock_signed(request: Request, file: UploadFile = File(...)):
+    """Take a filled PDF (signed in any viewer), flatten + lock + add verification."""
+    content = await file.read()
+    if len(content) < 5 or content[:5] != b"%PDF-":
+        return JSONResponse(status_code=400, content={"detail": "Invalid PDF"})
+
+    import hashlib
+    from datetime import datetime, timezone
+
+    client_ip = request.client.host if request.client else "unknown"
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if forwarded:
+        client_ip = forwarded.split(",")[0].strip()
+
+    verification = {
+        "ip": client_ip,
+        "user_agent": request.headers.get("user-agent", "unknown"),
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+    }
+
+    loop = asyncio.get_event_loop()
+    try:
+        result_bytes = await loop.run_in_executor(
+            None, partial(sign_and_lock_pdf, content, verification)
+        )
+    except Exception as exc:
+        return JSONResponse(status_code=500, content={"detail": f"Processing error: {exc}"})
+
+    return Response(
+        content=result_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": 'attachment; filename="signed_locked.pdf"'},
+    )
 
 
 @app.post("/api/prepare")
@@ -77,7 +127,7 @@ async def api_prepare_fields(
 
     try:
         result_bytes = await loop.run_in_executor(
-            None, partial(add_form_fields, content, field_defs)
+            None, partial(embed_field_metadata, content, field_defs)
         )
     except Exception as exc:
         return JSONResponse(status_code=500, content={"detail": f"Processing error: {exc}"})

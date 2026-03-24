@@ -31,8 +31,8 @@ header h1 { font-size: 1.5rem; font-weight: 700; }
 
 .hidden { display: none !important; }
 
-/* Upload */
-#upload-screen {
+/* Landing */
+#landing-screen {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,28 +40,29 @@ header h1 { font-size: 1.5rem; font-weight: 700; }
   padding: 2rem;
 }
 
-#drop-zone {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 4rem 3rem;
-  text-align: center;
-  background: var(--surface);
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-  max-width: 500px;
+.mode-cards {
+  display: flex;
+  gap: 2rem;
+  max-width: 700px;
   width: 100%;
 }
-#drop-zone:hover, #drop-zone.dragover {
+
+.mode-card {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.mode-card:hover {
   border-color: var(--primary);
-  background: rgba(37, 99, 235, 0.03);
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
 }
-.drop-content svg { color: var(--text-muted); margin-bottom: 1rem; }
-.drop-content p { font-size: 1rem; color: var(--text-muted); }
-.drop-content .link {
-  color: var(--primary);
-  cursor: pointer;
-  text-decoration: underline;
-}
+.mode-card-icon { color: var(--text-muted); margin-bottom: 1rem; }
+.mode-card h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.mode-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.5; }
 
 /* Toolbar */
 .toolbar {
