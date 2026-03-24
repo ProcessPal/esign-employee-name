@@ -31,3 +31,4 @@ Offer Letter*.pdf
 # Node (for Cloudflare Workers)
 node_modules/
 .wrangler/
+public/

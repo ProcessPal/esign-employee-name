@@ -1,0 +1,16 @@
+{
+  "name": "esign-employee-name",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p public/static && cp static/index.html public/ && cp static/style.css static/app.js public/static/",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
