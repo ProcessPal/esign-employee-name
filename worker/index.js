@@ -1,4 +1,5 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { encryptPdfPrintOnly } from "./pdf-encrypt.js";
 
 const MAX_UPLOAD_SIZE = 50 * 1024 * 1024; // 50 MB
 
@@ -211,10 +212,9 @@ async function handleSign(request) {
       }
     }
 
-    // Note: PDF encryption (lock after signing) is not available in pdf-lib.
-    // The Python version encrypts with print-only permissions. This Worker
-    // version produces an unencrypted signed PDF.
-    const resultBytes = await pdfDoc.save();
+    // Encrypt with print-only permissions (no user password, random owner password)
+    const unencryptedBytes = await pdfDoc.save();
+    const resultBytes = await encryptPdfPrintOnly(unencryptedBytes);
     return new Response(resultBytes, {
       headers: {
         "Content-Type": "application/pdf",
