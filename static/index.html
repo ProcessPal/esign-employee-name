@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eSign — PDF Signing</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>eSign</h1>
+      <p class="subtitle">Upload a PDF, place signature and date fields, sign and download.</p>
+    </header>
+
+    <!-- Upload Screen -->
+    <div id="upload-screen">
+      <div id="drop-zone">
+        <div class="drop-content">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+          </svg>
+          <p>Drop PDF here or <label for="file-input" class="link">browse</label></p>
+          <input type="file" id="file-input" accept=".pdf,application/pdf" hidden>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor Screen -->
+    <div id="editor-screen" class="hidden">
+      <div class="toolbar">
+        <div class="toolbar-left" id="placing-tools">
+          <button id="btn-name-field" class="tool-btn active" data-type="name">
+            <span class="field-icon name-icon">N</span> Name Field
+          </button>
+          <button id="btn-date-field" class="tool-btn" data-type="date">
+            <span class="field-icon date-icon">D</span> Date Field
+          </button>
+        </div>
+        <div class="toolbar-center">
+          <button id="btn-prev-page" disabled>&larr;</button>
+          <span id="page-info">Page 1 / 1</span>
+          <button id="btn-next-page" disabled>&rarr;</button>
+        </div>
+        <div class="toolbar-right">
+          <span id="mode-label" class="mode-label"></span>
+          <button id="btn-prepare" class="secondary-btn" disabled>Prepare PDF</button>
+          <button id="btn-sign" class="primary-btn" disabled>Fill & Sign</button>
+          <button id="btn-reset" class="secondary-btn">Start Over</button>
+        </div>
+      </div>
+
+      <div class="editor-body">
+        <div id="canvas-container">
+          <canvas id="pdf-canvas"></canvas>
+          <div id="field-overlay"></div>
+        </div>
+        <div id="field-list-panel">
+          <h3>Placed Fields <span id="field-count">(0)</span></h3>
+          <div id="field-list"></div>
+          <div class="panel-help">
+            <p><strong>Step 1:</strong> Select Name or Date field type</p>
+            <p><strong>Step 2:</strong> Click and drag on the PDF to place fields</p>
+            <p><strong>Step 3:</strong> Click "Fill & Sign" to enter values and download</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js" type="module"></script>
+</body>
+</html>

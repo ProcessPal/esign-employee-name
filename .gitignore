@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Test output PDFs
+output-*.pdf
+test_*.pdf
+
+# Sensitive documents
+Offer Letter*.pdf
+
+# Claude Code state
+.claude/gsd-state/
+
+# Node (for Cloudflare Workers)
+node_modules/
+.wrangler/
