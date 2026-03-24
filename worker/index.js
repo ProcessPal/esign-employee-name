@@ -84,7 +84,14 @@ async function handlePrepare(request) {
 
       const fieldName = f.name || `Field_${fieldDefs.indexOf(f)}`;
       const textField = form.createTextField(fieldName);
-      textField.addToPage(page, { x, y: yBottom, width: w, height: h });
+      textField.addToPage(page, {
+        x,
+        y: yBottom,
+        width: w,
+        height: h,
+        borderWidth: 0,
+        backgroundColor: rgb(1, 1, 1),
+      });
     }
 
     const resultBytes = await pdfDoc.save();
