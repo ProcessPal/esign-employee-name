@@ -20,19 +20,24 @@ app = FastAPI(title="eSign Employee Name API", version="0.1.0")
 MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50 MB
 READ_CHUNK_SIZE = 64 * 1024  # 64 KB
 
-# Serve static files for the web UI
+# Serve static files locally (Cloudflare Workers uses [assets] in wrangler.toml)
+# Static files — local dev only (Workers uses [assets] in wrangler.toml)
 STATIC_DIR = Path(__file__).resolve().parent.parent.parent / "static"
-if STATIC_DIR.exists():
-    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+if STATIC_DIR.exists() and not STATIC_DIR.name.startswith("."):
+    # Serve static at root (matches relative paths in index.html)
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static-compat")
 
+    @app.get("/style.css")
+    def serve_css():
+        return Response(content=(STATIC_DIR / "style.css").read_bytes(), media_type="text/css")
 
-@app.get("/")
-def index():
-    """Serve the web UI."""
-    index_path = STATIC_DIR / "index.html"
-    if index_path.exists():
-        return Response(content=index_path.read_text(), media_type="text/html")
-    return JSONResponse(status_code=404, content={"detail": "UI not found"})
+    @app.get("/app.js")
+    def serve_js():
+        return Response(content=(STATIC_DIR / "app.js").read_bytes(), media_type="application/javascript")
+
+    @app.get("/")
+    def index():
+        return Response(content=(STATIC_DIR / "index.html").read_text(), media_type="text/html")
 
 
 @app.get("/health")

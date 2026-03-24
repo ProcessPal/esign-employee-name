@@ -34,7 +34,8 @@ Offer Letter*.pdf
 # Certificates (private keys - auto-generated at runtime)
 certs/
 
-# Node (for Cloudflare Workers)
+# Build artifacts
 node_modules/
 .wrangler/
-public/
+.venv-workers/
+python_modules/

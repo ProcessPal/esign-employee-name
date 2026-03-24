@@ -5,8 +5,8 @@ build-backend = "hatchling.build"
 [project]
 name = "esign-employee-name"
 version = "0.1.0"
-description = "PDF e-signature field placement at 'Employee Name' text locations using pyHanko"
-requires-python = ">=3.10"
+description = "PDF e-signature field placement and certified signing using pyHanko"
+requires-python = ">=3.12"
 dependencies = [
     "pyhanko>=0.25",
     "pdfminer.six>=20231228",
